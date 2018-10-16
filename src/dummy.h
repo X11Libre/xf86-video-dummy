@@ -13,6 +13,8 @@
 
 #include "compat-api.h"
 
+#define DUMMY_MAX_SCREENS 4
+
 /* Supported chipsets */
 typedef enum {
     DUMMY_CHIP
@@ -52,6 +54,12 @@ typedef struct dummyRec
     dummy_colors colors[1024];
     Bool        (*CreateWindow)() ;     /* wrapped CreateWindow */
     Bool prop;
+    /* XRANDR support begin */
+    int num_screens;
+    struct _xf86Crtc *paCrtcs[DUMMY_MAX_SCREENS];
+    struct _xf86Output *paOutputs[DUMMY_MAX_SCREENS];
+    int connected_outputs;
+    /* XRANDR support end */
 } DUMMYRec, *DUMMYPtr;
 
 /* The privates of the DUMMY driver */
