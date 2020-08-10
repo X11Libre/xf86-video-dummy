@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2002, SuSE Linux AG, Author: Egbert Eich
  */
@@ -543,7 +542,7 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
     ClockRangePtr clockRanges;
     int i;
     DUMMYPtr dPtr;
-    int maxClock = 300000;
+    int maxClock = 1000000;
     GDevPtr device = xf86GetEntityInfo(pScrn->entityList[0])->device;
 
     if (flags & PROBE_DETECT) 
