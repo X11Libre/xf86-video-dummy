@@ -23,7 +23,7 @@
 # Initialize Autoconf
 AC_PREREQ([2.60])
 AC_INIT([xf86-video-dummy],
-        [0.3.8],
+        [0.4.0],
         [https://gitlab.freedesktop.org/xorg/driver/xf86-video-dummy/issues],
         [xf86-video-dummy])
 AC_CONFIG_SRCDIR([Makefile.am])
