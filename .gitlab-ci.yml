@@ -42,7 +42,7 @@ check-commits:
     - .fdo.ci-fairy
   stage: prep
   script:
-    - ci-fairy check-commits --signed-off-by --junit-xml=results.xml
+    - ci-fairy check-commits --junit-xml=results.xml
   except:
     - master@xorg/driver/xf86-video-dummy
   variables:
