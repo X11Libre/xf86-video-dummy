@@ -283,7 +283,8 @@ dummy_output_get_modes (xf86OutputPtr output)
     return pModes;
 }
 
-void dummy_output_register_prop(xf86OutputPtr output, Atom prop, uint64_t value)
+static void
+dummy_output_register_prop(xf86OutputPtr output, Atom prop, uint64_t value)
 {
     INT32 dims_range[2] = { 0, 65535 };
     int err;
@@ -301,7 +302,8 @@ void dummy_output_register_prop(xf86OutputPtr output, Atom prop, uint64_t value)
                 "RRChangeOutputProperty error, %d\n", err);
 }
 
-void dummy_output_create_resources(xf86OutputPtr output)
+static void
+dummy_output_create_resources(xf86OutputPtr output)
 {
     if (!ValidAtom(width_mm_atom))
         width_mm_atom = MakeAtom(WIDTH_MM_NAME, strlen(WIDTH_MM_NAME), 1);
