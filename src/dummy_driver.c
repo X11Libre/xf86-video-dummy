@@ -371,7 +371,6 @@ Bool DUMMYAdjustScreenPixmap(ScrnInfoPtr pScrn, int width, int height)
 {
     ScreenPtr pScreen = pScrn->pScreen;
     PixmapPtr pPixmap = pScreen->GetScreenPixmap(pScreen);
-    DUMMYPtr dPtr = DUMMYPTR(pScrn);
     uint64_t cbLine = (width * xf86GetBppFromDepth(pScrn, pScrn->depth) / 8 + 3) & ~3;
     int displayWidth = cbLine * 8 / xf86GetBppFromDepth(pScrn, pScrn->depth);
 
