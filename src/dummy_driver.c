@@ -271,7 +271,7 @@ dummy_output_get_modes (xf86OutputPtr output)
     /* copy modes from config */
     for (pModeSrc = output->scrn->modes; pModeSrc; pModeSrc = pModeSrc->next)
     {
-            pMode = xnfcalloc(1, sizeof(DisplayModeRec));
+            pMode = XNFcallocarray(1, sizeof(DisplayModeRec));
             memcpy(pMode, pModeSrc, sizeof(DisplayModeRec));
             pMode->next = NULL;
             pMode->prev = NULL;
@@ -448,7 +448,7 @@ DUMMYGetRec(ScrnInfoPtr pScrn)
     if (pScrn->driverPrivate != NULL)
 	return TRUE;
 
-    pScrn->driverPrivate = xnfcalloc(sizeof(DUMMYRec), 1);
+    pScrn->driverPrivate = XNFcallocarray(sizeof(DUMMYRec), 1);
 
     if (pScrn->driverPrivate == NULL)
 	return FALSE;
@@ -651,7 +651,7 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
      * Setup the ClockRanges, which describe what clock ranges are available,
      * and what sort of modes they can be used for.
      */
-    clockRanges = (ClockRangePtr)xnfcalloc(sizeof(ClockRange), 1);
+    clockRanges = (ClockRangePtr)XNFcallocarray(sizeof(ClockRange), 1);
     clockRanges->next = NULL;
     clockRanges->ClockMulFactor = 1;
     clockRanges->minClock = 11000;   /* guessed §§§ */
