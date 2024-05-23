@@ -47,13 +47,13 @@ static const OptionInfoRec *	DUMMYAvailableOptions(int chipid, int busid);
 static void     DUMMYIdentify(int flags);
 static Bool     DUMMYProbe(DriverPtr drv, int flags);
 static Bool     DUMMYPreInit(ScrnInfoPtr pScrn, int flags);
-static Bool     DUMMYScreenInit(SCREEN_INIT_ARGS_DECL);
-static Bool     DUMMYEnterVT(VT_FUNC_ARGS_DECL);
-static void     DUMMYLeaveVT(VT_FUNC_ARGS_DECL);
-static Bool     DUMMYCloseScreen(CLOSE_SCREEN_ARGS_DECL);
+static Bool     DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv);
+static Bool     DUMMYEnterVT(ScrnInfoPtr pScrn);
+static void     DUMMYLeaveVT(ScrnInfoPtr pScrn);
+static Bool     DUMMYCloseScreen(ScreenPtr pScreen);
 static Bool     DUMMYCreateWindow(WindowPtr pWin);
-static void     DUMMYFreeScreen(FREE_SCREEN_ARGS_DECL);
-static ModeStatus DUMMYValidMode(SCRN_ARG_TYPE arg, DisplayModePtr mode,
+static void     DUMMYFreeScreen(ScrnInfoPtr pScrn);
+static ModeStatus DUMMYValidMode(ScrnInfoPtr pScrn, DisplayModePtr mode,
                                  Bool verbose, int flags);
 static Bool	DUMMYSaveScreen(ScreenPtr pScreen, int mode);
 
@@ -723,14 +723,14 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
 
 /* Mandatory */
 static Bool
-DUMMYEnterVT(VT_FUNC_ARGS_DECL)
+DUMMYEnterVT(ScrnInfoPtr pScrn)
 {
     return TRUE;
 }
 
 /* Mandatory */
 static void
-DUMMYLeaveVT(VT_FUNC_ARGS_DECL)
+DUMMYLeaveVT(ScrnInfoPtr pScrn)
 {
 }
 
@@ -771,7 +771,7 @@ static ScrnInfoPtr DUMMYScrn; /* static-globalize it */
 
 /* Mandatory */
 static Bool
-DUMMYScreenInit(SCREEN_INIT_ARGS_DECL)
+DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
 {
     ScrnInfoPtr pScrn;
     DUMMYPtr dPtr;
@@ -958,20 +958,20 @@ DUMMYScreenInit(SCREEN_INIT_ARGS_DECL)
 
 /* Mandatory */
 Bool
-DUMMYSwitchMode(SWITCH_MODE_ARGS_DECL)
+DUMMYSwitchMode(ScrnInfoPtr pScrn, DisplayModePtr mode)
 {
     return TRUE;
 }
 
 /* Mandatory */
 void
-DUMMYAdjustFrame(ADJUST_FRAME_ARGS_DECL)
+DUMMYAdjustFrame(ScrnInfoPtr pScrn, int x, int y)
 {
 }
 
 /* Mandatory */
 static Bool
-DUMMYCloseScreen(CLOSE_SCREEN_ARGS_DECL)
+DUMMYCloseScreen(ScreenPtr pScreen)
 {
     ScrnInfoPtr pScrn = xf86ScreenToScrn(pScreen);
     DUMMYPtr dPtr = DUMMYPTR(pScrn);
@@ -983,14 +983,13 @@ DUMMYCloseScreen(CLOSE_SCREEN_ARGS_DECL)
 
     pScrn->vtSema = FALSE;
     pScreen->CloseScreen = dPtr->CloseScreen;
-    return (*pScreen->CloseScreen)(CLOSE_SCREEN_ARGS);
+    return (*pScreen->CloseScreen)(pScreen);
 }
 
 /* Optional */
 static void
-DUMMYFreeScreen(FREE_SCREEN_ARGS_DECL)
+DUMMYFreeScreen(ScrnInfoPtr pScrn)
 {
-    SCRN_INFO_PTR(arg);
     DUMMYFreeRec(pScrn);
 }
 
@@ -1002,7 +1001,7 @@ DUMMYSaveScreen(ScreenPtr pScreen, int mode)
 
 /* Optional */
 static ModeStatus
-DUMMYValidMode(SCRN_ARG_TYPE arg, DisplayModePtr mode, Bool verbose, int flags)
+DUMMYValidMode(ScrnInfoPtr pScrn, DisplayModePtr mode, Bool verbose, int flags)
 {
     return(MODE_OK);
 }
