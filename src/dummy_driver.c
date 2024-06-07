@@ -243,7 +243,7 @@ dummy_output_mode_set (xf86OutputPtr output, DisplayModePtr mode,
         DisplayModePtr adjusted_mode)
 {
     DUMMYPtr dPtr = DUMMYPTR(output->scrn);
-    int index = (int64_t)output->driver_private;
+    uintptr_t index = (uintptr_t)output->driver_private;
 
     /* set to connected at first mode set */
     dPtr->connected_outputs |= 1 << index;
@@ -255,7 +255,7 @@ static xf86OutputStatus
 dummy_output_detect (xf86OutputPtr output)
 {
     DUMMYPtr dPtr = DUMMYPTR(output->scrn);
-    int index = (int64_t)output->driver_private;
+    uintptr_t index = (uintptr_t)output->driver_private;
 
     if (dPtr->connected_outputs & (1 << index))
         return XF86OutputStatusConnected;
