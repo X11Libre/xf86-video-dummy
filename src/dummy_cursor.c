@@ -17,7 +17,7 @@ dummyShowCursor(ScrnInfoPtr pScrn)
     DUMMYPtr dPtr = DUMMYPTR(pScrn);
 
     /* turn cursor on */
-    dPtr->DummyHWCursorShown = TRUE;    
+    dPtr->DummyHWCursorShown = TRUE;
 }
 
 static void
@@ -26,7 +26,7 @@ dummyHideCursor(ScrnInfoPtr pScrn)
     DUMMYPtr dPtr = DUMMYPTR(pScrn);
 
     /*
-     * turn cursor off 
+     * turn cursor off
      *
      */
     dPtr->DummyHWCursorShown = FALSE;
@@ -47,7 +47,7 @@ static void
 dummySetCursorColors(ScrnInfoPtr pScrn, int bg, int fg)
 {
     DUMMYPtr dPtr = DUMMYPTR(pScrn);
-    
+
     dPtr->cursorFG = fg;
     dPtr->cursorBG = bg;
 }
@@ -94,7 +94,7 @@ DUMMYCursorInit(ScreenPtr pScreen)
     infoPtr->ShowCursor = dummyShowCursor;
     infoPtr->UseHWCursor = dummyUseHWCursor;
 /*     infoPtr->RealizeCursor = dummyRealizeCursor; */
-    
+
     return(xf86InitCursor(pScreen, infoPtr));
 }
 

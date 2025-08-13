@@ -36,7 +36,7 @@ typedef struct _color
     int blue;
 } dummy_colors;
 
-typedef struct dummyRec 
+typedef struct dummyRec
 {
     /* options */
     OptionInfoPtr Options;
