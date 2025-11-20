@@ -43,7 +43,7 @@
 #include "servermd.h"
 
 /* Mandatory functions */
-static const OptionInfoRec *	DUMMYAvailableOptions(int chipid, int busid);
+static const OptionInfoRec *DUMMYAvailableOptions(int chipid, int busid);
 static void     DUMMYIdentify(int flags);
 static Bool     DUMMYProbe(DriverPtr drv, int flags);
 static Bool     DUMMYPreInit(ScrnInfoPtr pScrn, int flags);
@@ -55,15 +55,11 @@ static Bool     DUMMYCreateWindow(WindowPtr pWin);
 static void     DUMMYFreeScreen(ScrnInfoPtr pScrn);
 static ModeStatus DUMMYValidMode(ScrnInfoPtr pScrn, DisplayModePtr mode,
                                  Bool verbose, int flags);
-static Bool	DUMMYSaveScreen(ScreenPtr pScreen, int mode);
+static Bool     DUMMYSaveScreen(ScreenPtr pScreen, int mode);
 
 /* Internally used functions */
-static Bool	dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op,
-				pointer ptr);
-
-
-/* static void     DUMMYDisplayPowerManagementSet(ScrnInfoPtr pScrn, */
-/* 				int PowerManagementMode, int flags); */
+static Bool     dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op,
+                                pointer ptr);
 
 #define DUMMY_VERSION 4000
 #define DUMMY_NAME "DUMMY"
@@ -107,8 +103,8 @@ _X_EXPORT DriverRec DUMMY = {
 };
 
 static SymTabRec DUMMYChipsets[] = {
-    { DUMMY_CHIP,   "dummy" },
-    { -1,		 NULL }
+    { DUMMY_CHIP, "dummy" },
+    { -1,         NULL }
 };
 
 typedef enum {
@@ -116,8 +112,8 @@ typedef enum {
 } DUMMYOpts;
 
 static const OptionInfoRec DUMMYOptions[] = {
-    { OPTION_SW_CURSOR,	"SWcursor",	OPTV_BOOLEAN,	{0}, FALSE },
-    { -1,                  NULL,           OPTV_NONE,	{0}, FALSE }
+    { OPTION_SW_CURSOR, "SWcursor", OPTV_BOOLEAN, {0}, FALSE },
+    { -1,               NULL,       OPTV_NONE,    {0}, FALSE }
 };
 
 #ifdef XFree86LOADER
@@ -126,16 +122,16 @@ static MODULESETUPPROTO(dummySetup);
 
 static XF86ModuleVersionInfo dummyVersRec =
 {
-	"dummy",
-	MODULEVENDORSTRING,
-	MODINFOSTRING1,
-	MODINFOSTRING2,
-	XORG_VERSION_CURRENT,
-	DUMMY_MAJOR_VERSION, DUMMY_MINOR_VERSION, DUMMY_PATCHLEVEL,
-	ABI_CLASS_VIDEODRV,
-	ABI_VIDEODRV_VERSION,
-	MOD_CLASS_VIDEODRV,
-	{0,0,0,0}
+    "dummy",
+    MODULEVENDORSTRING,
+    MODINFOSTRING1,
+    MODINFOSTRING2,
+    XORG_VERSION_CURRENT,
+    DUMMY_MAJOR_VERSION, DUMMY_MINOR_VERSION, DUMMY_PATCHLEVEL,
+    ABI_CLASS_VIDEODRV,
+    ABI_VIDEODRV_VERSION,
+    MOD_CLASS_VIDEODRV,
+    {0,0,0,0}
 };
 
 
@@ -416,22 +412,22 @@ dummySetup(pointer module, pointer opts, int *errmaj, int *errmin)
     static Bool setupDone = FALSE;
 
     if (!setupDone) {
-	setupDone = TRUE;
+        setupDone = TRUE;
         xf86AddDriver(&DUMMY, module, HaveDriverFuncs);
 
-	/*
-	 * Modules that this driver always requires can be loaded here
-	 * by calling LoadSubModule().
-	 */
+        /*
+         * Modules that this driver always requires can be loaded here
+         * by calling LoadSubModule().
+         */
 
-	/*
-	 * The return value must be non-NULL on success even though there
-	 * is no TearDownProc.
-	 */
-	return (pointer)1;
+        /*
+         * The return value must be non-NULL on success even though there
+         * is no TearDownProc.
+         */
+        return (pointer)1;
     } else {
-	if (errmaj) *errmaj = LDR_ONCEONLY;
-	return NULL;
+        if (errmaj) *errmaj = LDR_ONCEONLY;
+        return NULL;
     }
 }
 
@@ -446,12 +442,12 @@ DUMMYGetRec(ScrnInfoPtr pScrn)
      * the allocation has already been done.
      */
     if (pScrn->driverPrivate != NULL)
-	return TRUE;
+        return TRUE;
 
     pScrn->driverPrivate = XNFcallocarray(sizeof(DUMMYRec), 1);
 
     if (pScrn->driverPrivate == NULL)
-	return FALSE;
+        return FALSE;
     return TRUE;
 }
 
@@ -459,7 +455,7 @@ static void
 DUMMYFreeRec(ScrnInfoPtr pScrn)
 {
     if (pScrn->driverPrivate == NULL)
-	return;
+        return;
     free(pScrn->driverPrivate);
     pScrn->driverPrivate = NULL;
 }
@@ -475,7 +471,7 @@ static void
 DUMMYIdentify(int flags)
 {
     xf86PrintChipsets(DUMMY_NAME, "Driver for Dummy chipsets",
-			DUMMYChipsets);
+                      DUMMYChipsets);
 }
 
 /* Mandatory */
@@ -488,54 +484,48 @@ DUMMYProbe(DriverPtr drv, int flags)
     int i;
 
     if (flags & PROBE_DETECT)
-	return FALSE;
+        return FALSE;
     /*
      * Find the config file Device sections that match this
      * driver, and return if there are none.
      */
     if ((numDevSections = xf86MatchDevice(DUMMY_DRIVER_NAME,
-					  &devSections)) <= 0) {
-	return FALSE;
+                                          &devSections)) <= 0) {
+        return FALSE;
     }
 
     numUsed = numDevSections;
 
     if (numUsed > 0) {
-
-	for (i = 0; i < numUsed; i++) {
-	    ScrnInfoPtr pScrn = NULL;
-	    int entityIndex = 
-		xf86ClaimNoSlot(drv,DUMMY_CHIP,devSections[i],TRUE);
-	    /* Allocate a ScrnInfoRec and claim the slot */
-	    if ((pScrn = xf86AllocateScreen(drv,0 ))) {
-		   xf86AddEntityToScreen(pScrn,entityIndex);
-		    pScrn->driverVersion = DUMMY_VERSION;
-		    pScrn->driverName    = DUMMY_DRIVER_NAME;
-		    pScrn->name          = DUMMY_NAME;
-		    pScrn->Probe         = DUMMYProbe;
-		    pScrn->PreInit       = DUMMYPreInit;
-		    pScrn->ScreenInit    = DUMMYScreenInit;
-		    pScrn->SwitchMode    = DUMMYSwitchMode;
-		    pScrn->AdjustFrame   = DUMMYAdjustFrame;
-		    pScrn->EnterVT       = DUMMYEnterVT;
-		    pScrn->LeaveVT       = DUMMYLeaveVT;
-		    pScrn->FreeScreen    = DUMMYFreeScreen;
-		    pScrn->ValidMode     = DUMMYValidMode;
-
-		    foundScreen = TRUE;
-	    }
-	}
-    }    
+        for (i = 0; i < numUsed; i++) {
+            ScrnInfoPtr pScrn = NULL;
+            int entityIndex = xf86ClaimNoSlot(drv,DUMMY_CHIP,devSections[i],TRUE);
+            /* Allocate a ScrnInfoRec and claim the slot */
+            if ((pScrn = xf86AllocateScreen(drv,0 ))) {
+                xf86AddEntityToScreen(pScrn,entityIndex);
+                pScrn->driverVersion = DUMMY_VERSION;
+                pScrn->driverName    = DUMMY_DRIVER_NAME;
+                pScrn->name          = DUMMY_NAME;
+                pScrn->Probe         = DUMMYProbe;
+                pScrn->PreInit       = DUMMYPreInit;
+                pScrn->ScreenInit    = DUMMYScreenInit;
+                pScrn->SwitchMode    = DUMMYSwitchMode;
+                pScrn->AdjustFrame   = DUMMYAdjustFrame;
+                pScrn->EnterVT       = DUMMYEnterVT;
+                pScrn->LeaveVT       = DUMMYLeaveVT;
+                pScrn->FreeScreen    = DUMMYFreeScreen;
+                pScrn->ValidMode     = DUMMYValidMode;
+                foundScreen = TRUE;
+            }
+        }
+    }
 
     free(devSections);
 
     return foundScreen;
 }
 
-# define RETURN \
-    { DUMMYFreeRec(pScrn);\
-			    return FALSE;\
-					     }
+# define RETURN { DUMMYFreeRec(pScrn); return FALSE;}
 
 /* Mandatory */
 Bool
@@ -547,80 +537,78 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
     int maxClock = 300000;
     GDevPtr device = xf86GetEntityInfo(pScrn->entityList[0])->device;
 
-    if (flags & PROBE_DETECT) 
-	return TRUE;
-    
+    if (flags & PROBE_DETECT)
+        return TRUE;
+
     /* Allocate the DummyRec driverPrivate */
     if (!DUMMYGetRec(pScrn)) {
-	return FALSE;
+        return FALSE;
     }
-    
+
     dPtr = DUMMYPTR(pScrn);
 
-    pScrn->chipset = (char *)xf86TokenToString(DUMMYChipsets,
-					       DUMMY_CHIP);
+    pScrn->chipset = (char *)xf86TokenToString(DUMMYChipsets, DUMMY_CHIP);
 
     xf86DrvMsg(pScrn->scrnIndex, X_INFO, "Chipset is a DUMMY\n");
-    
+
     pScrn->monitor = pScrn->confScreen->monitor;
 
     if (!xf86SetDepthBpp(pScrn, 0, 0, 0,  Support24bppFb | Support32bppFb))
-	return FALSE;
+        return FALSE;
     else {
-	/* Check that the returned depth is one we support */
-	switch (pScrn->depth) {
-	case 8:
-	case 15:
-	case 16:
-	case 24:
-	case 30:
-	    break;
-	default:
-	    xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
-		       "Given depth (%d) is not supported by this driver\n",
-		       pScrn->depth);
-	    return FALSE;
-	}
+        /* Check that the returned depth is one we support */
+        switch (pScrn->depth) {
+            case 8:
+            case 15:
+            case 16:
+            case 24:
+            case 30:
+            break;
+            default:
+                xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
+                          "Given depth (%d) is not supported by this driver\n",
+                          pScrn->depth);
+                return FALSE;
+        }
     }
 
     xf86PrintDepthBpp(pScrn);
     if (pScrn->depth == 8)
-	pScrn->rgbBits = 8;
+        pScrn->rgbBits = 8;
 
     /* Get the depth24 pixmap format */
     if (pScrn->depth == 24 && pix24bpp == 0)
-	pix24bpp = xf86GetBppFromDepth(pScrn, 24);
+        pix24bpp = xf86GetBppFromDepth(pScrn, 24);
 
     /*
      * This must happen after pScrn->display has been set because
      * xf86SetWeight references it.
      */
     if (pScrn->depth > 8) {
-	/* The defaults are OK for us */
-	rgb zeros = {0, 0, 0};
+        /* The defaults are OK for us */
+        rgb zeros = {0, 0, 0};
 
-	if (!xf86SetWeight(pScrn, zeros, zeros)) {
-	    return FALSE;
-	} else {
-	    /* XXX check that weight returned is supported */
-	    ;
-	}
+        if (!xf86SetWeight(pScrn, zeros, zeros)) {
+            return FALSE;
+        } else {
+            /* XXX check that weight returned is supported */
+        }
     }
 
-    if (!xf86SetDefaultVisual(pScrn, -1)) 
-	return FALSE;
+    if (!xf86SetDefaultVisual(pScrn, -1))
+        return FALSE;
 
     if (pScrn->depth > 1) {
-	Gamma zeros = {0.0, 0.0, 0.0};
+        Gamma zeros = {0.0, 0.0, 0.0};
 
-	if (!xf86SetGamma(pScrn, zeros))
-	    return FALSE;
+        if (!xf86SetGamma(pScrn, zeros))
+            return FALSE;
     }
 
     xf86CollectOptions(pScrn, device->options);
     /* Process the options */
     if (!(dPtr->Options = malloc(sizeof(DUMMYOptions))))
-	return FALSE;
+        return FALSE;
     memcpy(dPtr->Options, DUMMYOptions, sizeof(DUMMYOptions));
 
     xf86ProcessOptions(pScrn->scrnIndex, pScrn->options, dPtr->Options);
@@ -628,22 +616,18 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
     xf86GetOptValBool(dPtr->Options, OPTION_SW_CURSOR,&dPtr->swCursor);
 
     if (device->videoRam != 0) {
-	pScrn->videoRam = device->videoRam;
-	xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "VideoRAM: %d kByte\n",
-		   pScrn->videoRam);
+        pScrn->videoRam = device->videoRam;
+        xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "VideoRAM: %d kByte\n", pScrn->videoRam);
     } else {
-	pScrn->videoRam = 4096;
-	xf86DrvMsg(pScrn->scrnIndex, X_PROBED, "VideoRAM: %d kByte\n",
-		   pScrn->videoRam);
+        pScrn->videoRam = 4096;
+        xf86DrvMsg(pScrn->scrnIndex, X_PROBED, "VideoRAM: %d kByte\n", pScrn->videoRam);
     }
-    
+
     if (device->dacSpeeds[0] != 0) {
-	maxClock = device->dacSpeeds[0];
-	xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "Max Clock: %d kHz\n",
-		   maxClock);
+        maxClock = device->dacSpeeds[0];
+        xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "Max Clock: %d kHz\n", maxClock);
     } else {
-	xf86DrvMsg(pScrn->scrnIndex, X_PROBED, "Max Clock: %d kHz\n",
-		   maxClock);
+        xf86DrvMsg(pScrn->scrnIndex, X_PROBED, "Max Clock: %d kHz\n", maxClock);
     }
 
     pScrn->progClock = TRUE;
@@ -656,33 +640,30 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
     clockRanges->ClockMulFactor = 1;
     clockRanges->minClock = 11000;   /* guessed §§§ */
     clockRanges->maxClock = maxClock;
-    clockRanges->clockIndex = -1;		/* programmable */
-    clockRanges->interlaceAllowed = TRUE; 
+    clockRanges->clockIndex = -1;    /* programmable */
+    clockRanges->interlaceAllowed = TRUE;
     clockRanges->doubleScanAllowed = TRUE;
 
     /* Subtract memory for HW cursor */
-
-
     {
-	int apertureSize = (pScrn->videoRam * 1024);
-	i = xf86ValidateModes(pScrn, pScrn->monitor->Modes,
-			      pScrn->display->modes, clockRanges,
-			      NULL, 256, DUMMY_MAX_WIDTH,
-			      (8 * pScrn->bitsPerPixel),
-			      128, DUMMY_MAX_HEIGHT, pScrn->display->virtualX,
-			      pScrn->display->virtualY, apertureSize,
-			      LOOKUP_BEST_REFRESH);
-
-       if (i == -1)
-           RETURN;
+        int apertureSize = (pScrn->videoRam * 1024);
+        i = xf86ValidateModes(pScrn, pScrn->monitor->Modes,
+                              pScrn->display->modes, clockRanges,
+                              NULL, 256, DUMMY_MAX_WIDTH,
+                              (8 * pScrn->bitsPerPixel),
+                              128, DUMMY_MAX_HEIGHT, pScrn->display->virtualX,
+                              pScrn->display->virtualY, apertureSize,
+                              LOOKUP_BEST_REFRESH);
+        if (i == -1)
+            RETURN;
     }
 
     /* Prune the modes marked as invalid */
     xf86PruneDriverModes(pScrn);
 
     if (i == 0 || pScrn->modes == NULL) {
-	xf86DrvMsg(pScrn->scrnIndex, X_ERROR, "No valid modes found\n");
-	RETURN;
+        xf86DrvMsg(pScrn->scrnIndex, X_ERROR, "No valid modes found\n");
+        RETURN;
     }
 
     /*
@@ -693,8 +674,8 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
      * driver and if the driver doesn't provide code to set them.  They
      * are not pre-initialised at all.
      */
-    xf86SetCrtcForModes(pScrn, 0); 
- 
+    xf86SetCrtcForModes(pScrn, 0);
+
     /* Set the current mode to the first in the list */
     pScrn->currentMode = pScrn->modes;
 
@@ -705,14 +686,14 @@ DUMMYPreInit(ScrnInfoPtr pScrn, int flags)
     xf86SetDpi(pScrn, 0, 0);
 
     if (xf86LoadSubModule(pScrn, "fb") == NULL) {
-	RETURN;
+        RETURN;
     }
 
     if (!dPtr->swCursor) {
-	if (!xf86LoadSubModule(pScrn, "ramdac"))
-	    RETURN;
+        if (!xf86LoadSubModule(pScrn, "ramdac"))
+            RETURN;
     }
-    
+
     /* We have no contiguous physical fb in physical memory */
     pScrn->memPhysBase = 0;
     pScrn->fbOffset = 0;
@@ -742,20 +723,20 @@ DUMMYLoadPalette(
    LOCO *colors,
    VisualPtr pVisual
 ){
-   int i, index, shift, Gshift;
-   DUMMYPtr dPtr = DUMMYPTR(pScrn);
+    int i, index, shift, Gshift;
+    DUMMYPtr dPtr = DUMMYPTR(pScrn);
 
-   switch(pScrn->depth) {
-   case 15:	
-	shift = Gshift = 1;
-	break;
-   case 16:
-	shift = 0; 
-        Gshift = 0;
-	break;
-   default:
-	shift = Gshift = 0;
-	break;
+    switch(pScrn->depth) {
+        case 15:
+            shift = Gshift = 1;
+        break;
+        case 16:
+            shift = 0;
+            Gshift = 0;
+        break;
+        default:
+            shift = Gshift = 0;
+        break;
    }
 
    for(i = 0; i < numColors; i++) {
@@ -763,8 +744,7 @@ DUMMYLoadPalette(
        dPtr->colors[index].red = colors[index].red << shift;
        dPtr->colors[index].green = colors[index].green << Gshift;
        dPtr->colors[index].blue = colors[index].blue << shift;
-   } 
-
+   }
 }
 
 static ScrnInfoPtr DUMMYScrn; /* static-globalize it */
@@ -787,17 +767,16 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
     dPtr = DUMMYPTR(pScrn);
     DUMMYScrn = pScrn;
 
-
     if (!(pixels = malloc(pScrn->videoRam * 1024)))
-	return FALSE;
+        return FALSE;
 
     /*
      * Reset visual list.
      */
     miClearVisualTypes();
-    
+
     /* Setup the visuals we support. */
-    
+
     if (!miSetVisualTypes(pScrn->depth,
                           miGetDefaultVisualMask(pScrn->depth),
                           pScrn->rgbBits, pScrn->defaultVisual)) {
@@ -815,27 +794,27 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
      * pScreen fields.
      */
     ret = fbScreenInit(pScreen, pixels,
-			    pScrn->virtualX, pScrn->virtualY,
-			    pScrn->xDpi, pScrn->yDpi,
-			    pScrn->displayWidth, pScrn->bitsPerPixel);
+                       pScrn->virtualX, pScrn->virtualY,
+                       pScrn->xDpi, pScrn->yDpi,
+                       pScrn->displayWidth, pScrn->bitsPerPixel);
     if (!ret)
-	return FALSE;
+        return FALSE;
 
     if (pScrn->depth > 8) {
         /* Fixup RGB ordering */
         visual = pScreen->visuals + pScreen->numVisuals;
         while (--visual >= pScreen->visuals) {
-	    if ((visual->class | DynamicClass) == DirectColor) {
-		visual->offsetRed = pScrn->offset.red;
-		visual->offsetGreen = pScrn->offset.green;
-		visual->offsetBlue = pScrn->offset.blue;
-		visual->redMask = pScrn->mask.red;
-		visual->greenMask = pScrn->mask.green;
-		visual->blueMask = pScrn->mask.blue;
-	    }
-	}
+            if ((visual->class | DynamicClass) == DirectColor) {
+                 visual->offsetRed = pScrn->offset.red;
+                 visual->offsetGreen = pScrn->offset.green;
+                 visual->offsetBlue = pScrn->offset.blue;
+                 visual->redMask = pScrn->mask.red;
+                 visual->greenMask = pScrn->mask.green;
+                 visual->blueMask = pScrn->mask.blue;
+            }
+        }
     }
-    
+
     /* must be after RGB ordering fixed */
     fbPictureInit(pScreen, 0, 0);
 
@@ -857,7 +836,6 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
         dPtr->paOutputs[i] = xf86OutputCreate(pScrn, &DUMMYOutputFuncs,
                 szOutput);
 
-
         xf86OutputUseScreenMonitor(dPtr->paOutputs[i], FALSE);
         dPtr->paOutputs[i]->possible_crtcs = 1 << i;
         dPtr->paOutputs[i]->possible_clones = 0;
@@ -865,14 +843,12 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
         xf86DrvMsg(pScrn->scrnIndex, X_INFO, "Created crtc (%p) and output %s (%p)\n",
                 (void *)dPtr->paCrtcs[i], szOutput,
                 (void *)dPtr->paOutputs[i]);
-
     }
 
     /* bitmask */
     dPtr->connected_outputs = 1;
 
     xf86CrtcSetSizeRange(pScrn, 64, 64, DUMMY_MAX_WIDTH, DUMMY_MAX_HEIGHT);
-
 
     /* Now create our initial CRTC/output configuration. */
     if (!xf86InitialConfiguration(pScrn, TRUE)) {
@@ -892,54 +868,48 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
 
     /* XRANDR initialization end */
     if (dPtr->swCursor)
-	xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "Using Software Cursor.\n");
+        xf86DrvMsg(pScrn->scrnIndex, X_CONFIG, "Using Software Cursor.\n");
 
     {
+        BoxRec AvailFBArea;
+        int lines = pScrn->videoRam * 1024 /
+            (pScrn->displayWidth * (pScrn->bitsPerPixel >> 3));
+        AvailFBArea.x1 = 0;
+        AvailFBArea.y1 = 0;
+        AvailFBArea.x2 = pScrn->displayWidth;
+        AvailFBArea.y2 = lines;
+        xf86InitFBManager(pScreen, &AvailFBArea);
 
-	 
-	BoxRec AvailFBArea;
-	int lines = pScrn->videoRam * 1024 /
-	    (pScrn->displayWidth * (pScrn->bitsPerPixel >> 3));
-	AvailFBArea.x1 = 0;
-	AvailFBArea.y1 = 0;
-	AvailFBArea.x2 = pScrn->displayWidth;
-	AvailFBArea.y2 = lines;
-	xf86InitFBManager(pScreen, &AvailFBArea); 
-	
-	xf86DrvMsg(pScrn->scrnIndex, X_INFO, 
-		   "Using %i scanlines of offscreen memory \n"
-		   , lines - pScrn->virtualY);
+        xf86DrvMsg(pScrn->scrnIndex, X_INFO,
+           "Using %i scanlines of offscreen memory \n"
+           , lines - pScrn->virtualY);
     }
 
     xf86SetBackingStore(pScreen);
     xf86SetSilkenMouse(pScreen);
-	
+
     /* Initialise cursor functions */
     miDCInitialize (pScreen, xf86GetPointerScreenFuncs());
 
-
     if (!dPtr->swCursor) {
-      /* HW cursor functions */
-      if (!DUMMYCursorInit(pScreen)) {
-	  xf86DrvMsg(pScrn->scrnIndex, X_ERROR,
-		     "Hardware cursor initialization failed\n");
-	  return FALSE;
-      }
+        /* HW cursor functions */
+        if (!DUMMYCursorInit(pScreen)) {
+            xf86DrvMsg(pScrn->scrnIndex, X_ERROR, "Hardware cursor initialization failed\n");
+            return FALSE;
+        }
     }
-    
+
     /* Initialise default colourmap */
     if(!miCreateDefColormap(pScreen))
-	return FALSE;
+        return FALSE;
 
     if (!xf86HandleColormaps(pScreen, 1024, pScrn->rgbBits,
-                         DUMMYLoadPalette, NULL, 
-                         CMAP_PALETTED_TRUECOLOR 
-			     | CMAP_RELOAD_ON_MODE_SWITCH))
-	return FALSE;
+                         DUMMYLoadPalette, NULL,
+                         CMAP_PALETTED_TRUECOLOR | CMAP_RELOAD_ON_MODE_SWITCH))
+        return FALSE;
 
     pScreen->SaveScreen = DUMMYSaveScreen;
 
-    
     /* Wrap the current CloseScreen function */
     dPtr->CloseScreen = pScreen->CloseScreen;
     pScreen->CloseScreen = DUMMYCloseScreen;
@@ -950,7 +920,7 @@ DUMMYScreenInit(ScreenPtr pScreen, int argc, char **argv)
 
     /* Report any unused options (only for the first generation) */
     if (serverGeneration == 1) {
-	xf86ShowUnusedOptions(pScrn->scrnIndex, pScrn->options);
+        xf86ShowUnusedOptions(pScrn->scrnIndex, pScrn->options);
     }
 
     return TRUE;
@@ -979,7 +949,7 @@ DUMMYCloseScreen(ScreenPtr pScreen)
     free(pScreen->GetScreenPixmap(pScreen)->devPrivate.ptr);
 
     if (dPtr->CursorInfo)
-	xf86DestroyCursorInfoRec(dPtr->CursorInfo);
+        xf86DestroyCursorInfoRec(dPtr->CursorInfo);
 
     pScrn->vtSema = FALSE;
     pScreen->CloseScreen = dPtr->CloseScreen;
@@ -1023,8 +993,8 @@ DUMMYCreateWindow(WindowPtr pWin)
     pScreen->CreateWindow = DUMMYCreateWindow;
 
     if(ret != TRUE)
-	return(ret);
-	
+        return(ret);
+
     if(dPtr->prop == FALSE) {
         pWinRoot = DUMMYScrn->pScreen->root;
 
@@ -1034,11 +1004,11 @@ DUMMYCreateWindow(WindowPtr pWin)
         ret = dixChangeWindowProperty(serverClient, pWinRoot, VFB_PROP,
                                       XA_STRING, 8, PropModeReplace,
                                       (int)4, (pointer)"TRUE", FALSE);
-	if( ret != Success)
-		ErrorF("Could not set VFB root window property");
+        if( ret != Success)
+            ErrorF("Could not set VFB root window property");
         dPtr->prop = TRUE;
 
-	return TRUE;
+        return TRUE;
     }
     return TRUE;
 }
@@ -1051,13 +1021,13 @@ static Bool
 dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op, pointer ptr)
 {
     CARD32 *flag;
-    
+
     switch (op) {
-	case GET_REQUIRED_HW_INTERFACES:
-	    flag = (CARD32*)ptr;
-	    (*flag) = HW_SKIP_CONSOLE;
-	    return TRUE;
-	default:
-	    return FALSE;
+        case GET_REQUIRED_HW_INTERFACES:
+            flag = (CARD32*)ptr;
+            (*flag) = HW_SKIP_CONSOLE;
+            return TRUE;
+        default:
+            return FALSE;
     }
 }
