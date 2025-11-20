@@ -32,7 +32,7 @@ typedef struct _color
     int blue;
 } dummy_colors;
 
-typedef struct dummyRec 
+typedef struct dummyRec
 {
     /* options */
     OptionInfoPtr Options;
@@ -57,5 +57,4 @@ typedef struct dummyRec
 } DUMMYRec, *DUMMYPtr;
 
 /* The privates of the DUMMY driver */
-#define DUMMYPTR(p)	((DUMMYPtr)((p)->driverPrivate))
-
+#define DUMMYPTR(p) ((DUMMYPtr)((p)->driverPrivate))
