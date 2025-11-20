@@ -5,10 +5,6 @@
 
 #include "xf86Cursor.h"
 
-#ifdef XvExtension
-#include "xf86xv.h"
-#include <X11/extensions/Xv.h>
-#endif
 #include <string.h>
 
 #define DUMMY_MAX_SCREENS 16
