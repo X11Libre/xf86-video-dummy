@@ -19,7 +19,7 @@
 
 /* identifying atom needed by magnifiers */
 #include <X11/Xatom.h>
-#include "property.h"
+#include "window.h"
 
 #include "xf86cmap.h"
 
