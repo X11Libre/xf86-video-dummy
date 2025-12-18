@@ -61,12 +61,6 @@ XORG_DRIVER_CHECK_EXT(RENDER, renderproto)
 # Obtain compiler/linker options for the driver dependencies
 PKG_CHECK_MODULES(XORG, [xorg-server >= 1.18] xproto fontsproto $REQUIRED_MODULES)
 
-# Checks for libraries.
-
-
-DRIVER_NAME=dummy
-AC_SUBST([DRIVER_NAME])
-
 AC_CONFIG_FILES([
                 Makefile
                 src/Makefile
