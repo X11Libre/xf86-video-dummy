@@ -56,7 +56,7 @@ static Bool     DUMMYSaveScreen(ScreenPtr pScreen, int mode);
 
 /* Internally used functions */
 static Bool     dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op,
-                                pointer ptr);
+                                void *ptr);
 
 #define DUMMY_VERSION 4000
 #define DUMMY_NAME "DUMMY"
@@ -401,8 +401,8 @@ Bool DUMMYAdjustScreenPixmap(ScrnInfoPtr pScrn, int width, int height)
  */
 _X_EXPORT XF86ModuleData dummyModuleData = { &dummyVersRec, dummySetup, NULL };
 
-static pointer
-dummySetup(pointer module, pointer opts, int *errmaj, int *errmin)
+static void*
+dummySetup(void *module, void *opts, int *errmaj, int *errmin)
 {
     static Bool setupDone = FALSE;
 
@@ -419,7 +419,7 @@ dummySetup(pointer module, pointer opts, int *errmaj, int *errmin)
          * The return value must be non-NULL on success even though there
          * is no TearDownProc.
          */
-        return (pointer)1;
+        return (void*)1;
     } else {
         if (errmaj) *errmaj = LDR_ONCEONLY;
         return NULL;
@@ -996,7 +996,7 @@ DUMMYCreateWindow(WindowPtr pWin)
 
         ret = dixChangeWindowProperty(serverClient, pWinRoot, VFB_PROP,
                                       XA_STRING, 8, PropModeReplace,
-                                      (int)4, (pointer)"TRUE", FALSE);
+                                      (int)4, (void*)"TRUE", FALSE);
         if( ret != Success)
             ErrorF("Could not set VFB root window property");
         dPtr->prop = TRUE;
@@ -1011,7 +1011,7 @@ DUMMYCreateWindow(WindowPtr pWin)
 #endif
 
 static Bool
-dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op, pointer ptr)
+dummyDriverFunc(ScrnInfoPtr pScrn, xorgDriverFuncOp op, void *ptr)
 {
     CARD32 *flag;
 
