@@ -341,9 +341,7 @@ static const xf86OutputFuncsRec DUMMYOutputFuncs = {
     .mode_set = dummy_output_mode_set,
     .detect = dummy_output_detect,
     .get_modes = dummy_output_get_modes,
-#ifdef RANDR_12_INTERFACE
     .set_property = dummy_output_set_property,
-#endif
     .destroy = dummy_output_stub
 };
 
