@@ -46,13 +46,9 @@ AH_TOP([#include "xorg-server.h"])
 
 # Define a configure option for an alternate module directory
 PKG_PROG_PKG_CONFIG([0.25])
-AC_ARG_WITH(xorg-module-dir,
-            AS_HELP_STRING([--with-xorg-module-dir=DIR],
-                           [Default xorg module directory]),
-            [moduledir="$withval"],
-            [moduledir=`$PKG_CONFIG --variable=moduledir xorg-server`])
-AC_SUBST(moduledir)
 
+xlibre_video_drivers_dir=`$PKG_CONFIG --variable=video_drivers_dir xlibre-server`
+AC_SUBST(xlibre_video_drivers_dir)
 
 # Store the list of server defined optional extensions in REQUIRED_MODULES
 XORG_DRIVER_CHECK_EXT(RANDR, randrproto)
